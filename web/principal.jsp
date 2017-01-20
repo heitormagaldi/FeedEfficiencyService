@@ -46,7 +46,7 @@
                         <span class="icon-bar"></span>
                         <span class="icon-bar"></span>
                     </button>
-                    <a class="navbar-brand" href="index.html">AgroPROV</a>
+                    <a class="navbar-brand" href="principal.jsp">AgroPROV</a>
                 </div>
                 <!-- Top Menu Items -->
                 <ul class="nav navbar-right top-nav">
@@ -60,7 +60,7 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong>Heitor Magaldi</strong>
+                                            <h5 class="media-heading"><strong><%= request.getAttribute("login") %></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -75,7 +75,7 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong>Heitor Magaldi</strong>
+                                            <h5 class="media-heading"><strong><%= request.getAttribute("login") %></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -90,7 +90,7 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong>Heitor Magaldi</strong>
+                                            <h5 class="media-heading"><strong><%= request.getAttribute("login") %></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -131,7 +131,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> Heitor Magaldi <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= request.getAttribute("login") %> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="#"><i class="fa fa-fw fa-user"></i> Perfil</a>
@@ -153,13 +153,7 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav side-nav">
                         <li class="active">
-                            <a href="index.html"><i class="fa fa-fw fa-dashboard"></i> Principal</a>
-                        </li>
-                        <li>
-                            <a href="charts.html"><i class="fa fa-fw fa-bar-chart-o"></i> Estat&iacute;stica</a>
-                        </li>
-                        <li>
-                            <a href="tables.html"><i class="fa fa-fw fa-table"></i> Dados Prim&aacute;rios</a>
+                            <a href="principal.jsp"><i class="fa fa-fw fa-dashboard"></i> Principal</a>
                         </li>
                         <li>
                             <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-edit"></i> Cadastros <i class="fa fa-fw fa-caret-down"></i></a>
@@ -169,13 +163,13 @@
                                     <a href="forms.html">Experimentos</a>
                                 </li>
                                 <li>
-                                    <a href="forms.html">Animais</a>
+                                    <a href="animal.jsp">Animais</a>
                                 </li>
                                 <li>
-                                    <a href="forms.html">Dados de Bebedouro</a>
+                                    <a href="bebedouro.jsp">Dados de Bebedouro</a>
                                 </li>
                                 <li>
-                                    <a href="forms.html">Dados de Refei&ccedil;&otilde;es</a>
+                                    <a href="refeicao.jsp">Dados de Refei&ccedil;&otilde;es</a>
                                 </li>
                                 <li>
                                     <a href="forms.html">Dados de Temperatura</a>
@@ -184,20 +178,18 @@
                         </li>
 
                         <li>
-                            <a href="bootstrap-grid.html"><i class="fa fa-fw fa-wrench"></i> Configura&ccedil;&otilde;es</a>
+                            <a href="blank-page.html"><i class="fa fa-fw fa-bar-chart-o"></i> Estat&iacute;sticas</a>
+                        </li>
+                        
+                        <li>
+                            <a href="ImportarArquivos.html"><i class="fa fa-upload"></i> Importa&ccedil;&atilde;o </a>
                         </li>
                         <li>
-                            <a href="javascript:;" data-toggle="collapse" data-target="#demo"><i class="fa fa-fw fa-arrows-v"></i> Dropdown <i class="fa fa-fw fa-caret-down"></i></a>
-
+                            <a href="blank-page.html"><i class="fa fa-fw fa-table"></i> Dados Prim&aacute;rios</a>
                         </li>
-
-                        <li>
-                            <a href="bootstrap-elements.html"><i class="fa fa-fw fa-desktop"></i> Bootstrap Elements</a>
-                        </li>
-
-                        <li>
-                            <a href="blank-page.html"><i class="fa fa-fw fa-file"></i> Blank Page</a>
-                        </li>
+                        
+                        
+                        
 
                     </ul>
                 </div>
@@ -227,7 +219,7 @@
                         <div class="col-lg-12">
                             <div class="alert alert-info alert-dismissable">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                <i class="fa fa-info-circle"></i>  <strong>Heitor Magadi </strong> fique atento as novas  <a href="http://startbootstrap.com/template-overviews/sb-admin-2" target="_blank" class="alert-link">Funcionalidades</a> !!
+                                <i class="fa fa-info-circle"></i>  <strong><%= request.getAttribute("login") %> </strong> fique atento as novas  <a href="http://startbootstrap.com/template-overviews/sb-admin-2" target="_blank" class="alert-link">Funcionalidades</a> !!
                             </div>
                         </div>
                     </div>

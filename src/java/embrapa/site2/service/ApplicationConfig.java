@@ -34,6 +34,7 @@ public class ApplicationConfig extends Application {
         resources.add(embrapa.site2.service.ServiceCobertura.class);
         resources.add(embrapa.site2.service.ServiceRaca.class);
         resources.add(embrapa.site2.service.ServiceRefeicao.class);
+        resources.add(embrapa.site2.service.ServiceTemperatura.class);
         resources.add(embrapa.site2.service.ServiceUser.class);
     }
     

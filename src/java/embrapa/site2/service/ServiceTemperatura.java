@@ -6,8 +6,8 @@
 package embrapa.site2.service;
 
 import embrapa.bo.BOFactory;
-import embrapa.dao.DAOAnimal;
-import embrapa.to.TOAnimal;
+import embrapa.dao.DAOTemperatura;
+import embrapa.to.TOTemperatura;
 import java.sql.Date;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,8 +24,8 @@ import org.json.JSONObject;
  *
  * @author Heitor
  */
-@Path("animal")
-public class ServiceAnimal {
+@Path("temperatura")
+public class ServiceTemperatura {
 
     @Context
     private UriInfo context;
@@ -33,16 +33,16 @@ public class ServiceAnimal {
     /**
      * Creates a new instance of ServiceUser
      */
-    public ServiceAnimal() {
+    public ServiceTemperatura() {
     }
 
-    //http://localhost:8084/embrapa.site2/services/animal/list
+    //http://localhost:8084/embrapa.site2/services/temperatura/list
     @GET
     @Path("list")
     public String list() throws JSONException {
         JSONObject j = new JSONObject();
         try {
-            JSONArray ja = BOFactory.list(new DAOAnimal());
+            JSONArray ja = BOFactory.list(new DAOTemperatura());
             j.put("list", ja);
             j.put("success", true);
         } catch (Exception e) {
@@ -55,8 +55,8 @@ public class ServiceAnimal {
     @GET
     //@POST
     //@Path("insert")
-    //http://localhost:8084/embrapa.site2/services/animal/insert/9999,9999,9999,3,1,01/01/2018,Boi Teste,F
-    @Path("insert/{codigo},{registro},{manejo},{raca},{cobertura},{nascimento},{nome},{sexo}")
+    //http://localhost:8084/embrapa.site2/services/temperatura/insert/xxxx
+    @Path("insert/{codigo},{equipamento},{sensor},{valor},{data},{hora}")
 ///{codigo},{registro},{manejo},{raca},{cobertura},{nascimento},{nome},{sexo}
     /*public String insert(@FormParam("login") String login,
             @FormParam("senha") String senha,
@@ -65,13 +65,11 @@ public class ServiceAnimal {
      
      */
     public String insert(@PathParam("codigo") Integer codigo,
-            @PathParam("registro") String registro,
-            @PathParam("manejo") String manejo,
-            @PathParam("raca") Integer raca,
-            @PathParam("cobertura") Integer cobertura,
-            @PathParam("nascimento") String nascimentotemp,
-            @PathParam("nome") String nome,
-            @PathParam("sexo") String sexo) throws Exception {
+            @PathParam("equipamento") Integer equipamento,
+            @PathParam("sensor") String sensor,
+            @PathParam("valor") Float valor,
+            @PathParam("data") String datatemp,
+            @PathParam("hora") String hora) throws Exception {
 
         JSONObject j = new JSONObject();
 
@@ -79,22 +77,20 @@ public class ServiceAnimal {
 
             DateFormat ConversorDate2 = new SimpleDateFormat("dd-MM-yyyy");
 
-            String dateTemp = nascimentotemp.substring(0, 2) + "-"
-                    + nascimentotemp.substring(2, 4) + "-" + nascimentotemp.substring(4, 8);
+            String dateTemp = datatemp.substring(0, 2) + "-"
+                    + datatemp.substring(2, 4) + "-" + datatemp.substring(4, 8);
 
-            Date nascimento = new java.sql.Date(ConversorDate2.parse(dateTemp).getTime());
+            Date data = new java.sql.Date(ConversorDate2.parse(dateTemp).getTime());
 
-            TOAnimal t = new TOAnimal();
+            TOTemperatura t = new TOTemperatura();
             t.setCodigo(codigo);
-            t.setRegistro(registro);
-            t.setManejo(manejo);
-            t.setRaca(raca);
-            t.setCobertura(cobertura);
-            t.setNascimento(nascimento);
-            t.setNome(nome);
-            t.setSexo(sexo);
+            t.setEquipamento(equipamento);
+            t.setSensor(sensor);
+            t.setValor(valor);
+            t.setData(data);
+            t.setHora(hora);
 
-            BOFactory.insert(new DAOAnimal(), t);
+            BOFactory.insert(new DAOTemperatura(), t);
             j.put("id", t.getCodigo());
             j.put("success", true);
         } catch (Exception e) {
@@ -109,43 +105,39 @@ public class ServiceAnimal {
     @GET
     //@Path("update")
     //http://localhost:8084/embrapa.site2/services/user/update/6QR0HI6KKB7B31B5T4HB2S,EdilmaAtualizada,Heitor1234,edilma@terra.com.br,perfil2
-    @Path("update/{codigo},{registro},{manejo},{raca},{cobertura},{nascimento},{nome},{sexo}")
+    @Path("update/{codigo},{equipamento},{sensor},{valor},{data},{hora}")
     public String update(@PathParam("codigo") Integer codigo,
-            @PathParam("registro") String registro,
-            @PathParam("manejo") String manejo,
-            @PathParam("raca") Integer raca,
-            @PathParam("cobertura") Integer cobertura,
-            @PathParam("nascimento") String nascimentotemp,
-            @PathParam("nome") String nome,
-            @PathParam("sexo") String sexo) throws Exception {
+            @PathParam("equipamento") Integer equipamento,
+            @PathParam("sensor") String sensor,
+            @PathParam("valor") Float valor,
+            @PathParam("data") String datatemp,
+            @PathParam("hora") String hora) throws Exception {
 
         JSONObject j = new JSONObject();
         try {
-            TOAnimal t = new TOAnimal();
+            TOTemperatura t = new TOTemperatura();
             t.setCodigo(codigo);
 
-            t = (TOAnimal) BOFactory.get(new DAOAnimal(), t);
+            t = (TOTemperatura) BOFactory.get(new DAOTemperatura(), t);
 
             if (t == null) {
                 j.put("success", false);
-                j.put("message", "Animal não encontrado");
+                j.put("message", "Temperatura não encontrada");
             } else {
-                t.setRegistro(registro);
-                t.setManejo(manejo);
-                t.setRaca(raca);
-                t.setCobertura(cobertura);
-
                 DateFormat ConversorDate2 = new SimpleDateFormat("dd-MM-yyyy");
 
-                String dateTemp = nascimentotemp.substring(0, 2) + "-"
-                        + nascimentotemp.substring(2, 4) + "-" + nascimentotemp.substring(4, 8);
+                String dateTemp = datatemp.substring(0, 2) + "-"
+                        + datatemp.substring(2, 4) + "-" + datatemp.substring(4, 8);
 
-                Date nascimento = new java.sql.Date(ConversorDate2.parse(dateTemp).getTime());
-                t.setNascimento(nascimento);
-                t.setNome(nome);
-                t.setSexo(sexo);
+                Date data = new java.sql.Date(ConversorDate2.parse(dateTemp).getTime());
 
-                BOFactory.update(new DAOAnimal(), t);
+                t.setEquipamento(equipamento);
+                t.setSensor(sensor);
+                t.setValor(valor);
+                t.setData(data);
+                t.setHora(hora);
+              
+                BOFactory.update(new DAOTemperatura(), t);
                 j.put("codigo", t.getCodigo());
                 j.put("success", true);
             }
@@ -157,25 +149,26 @@ public class ServiceAnimal {
 
         return j.toString();
     }
+
     //@POST
     @GET
     //@Path("update")
-    //http://localhost:8084/embrapa.site2/services/animal/delete/9998
+    //http://localhost:8084/embrapa.site2/services/temperatura/delete/9998
     @Path("delete/{codigo}")
     public String DELETE(@PathParam("codigo") Integer codigo) throws Exception {
         /*public String update(@FormParam("id") String id) throws Exception {*/
         JSONObject j = new JSONObject();
         try {
-            TOAnimal t = new TOAnimal();
+            TOTemperatura t = new TOTemperatura();
             t.setCodigo(codigo);
 
-            t = (TOAnimal) BOFactory.get(new DAOAnimal(), t);
+            t = (TOTemperatura) BOFactory.get(new DAOTemperatura(), t);
 
             if (t == null) {
                 j.put("success", false);
-                j.put("message", "Animal não encontrado");
+                j.put("message", "Temperatura não encontrada");
             } else {
-                BOFactory.delete(new DAOAnimal(), t);
+                BOFactory.delete(new DAOTemperatura(), t);
                 j.put("success", true);
             }
 

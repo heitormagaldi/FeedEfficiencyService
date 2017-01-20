@@ -43,7 +43,24 @@ public class ServiceBebedouro {
         JSONObject j = new JSONObject();
         try {
             JSONArray ja = BOFactory.list(new DAOBebedouro());
-            j.put("data", ja);
+            j.put("list", ja);
+            j.put("success", true);
+        } catch (Exception e) {
+            j.put("success", false);
+            j.put("message", e.getMessage());
+        }
+        return j.toString();
+    }
+
+    @GET
+    @Path("listcodigo/{codigo}")
+    public String listCodigo(@PathParam("codigo") Integer codigo) throws JSONException {
+        JSONObject j = new JSONObject();
+        TOBebedouro t = new TOBebedouro();
+        t.setCodigo(codigo);
+        try {
+            JSONArray ja = BOFactory.listCodigo(new DAOBebedouro(), t);
+            j.put("list", ja);
             j.put("success", true);
         } catch (Exception e) {
             j.put("success", false);

@@ -43,7 +43,7 @@ public class ServiceUser {
         JSONObject j = new JSONObject();
         try {
             JSONArray ja = BOFactory.list(new DAOUser());
-            j.put("data", ja);
+            j.put("list", ja);
             j.put("success", true);
         } catch (Exception e) {
             j.put("success", false);
@@ -113,7 +113,7 @@ public class ServiceUser {
 
             if (t == null) {
                 j.put("success", false);
-                j.put("message", "Usuário não encontrado");
+                j.put("message", "Usu&aacute;rio n&atilde;o encontrado");
             } else {
                 t.setLogin(login);
                 t.setEmail(email);
@@ -148,7 +148,7 @@ public class ServiceUser {
 
             if (t == null) {
                 j.put("success", false);
-                j.put("message", "Usuário não encontrado");
+                j.put("message", "Usu&aacute;rio n&atilde;o encontrado");
             } else {
                 BOFactory.delete(new DAOUser(), t);
                 j.put("success", true);
@@ -170,5 +170,40 @@ public class ServiceUser {
         j.put("sucess", true);
         return j.toString();
     }
+    
+     //@POST
+    @GET
+    //@Path("update")
+    //http://localhost:8084/embrapa.site2/services/user/update/6QR0HI6KKB7B31B5T4HB2S,EdilmaAtualizada,Heitor1234,edilma@terra.com.br,perfil2
+    @Path("check/{login},{senha}")
+    public String check(@PathParam("login") String login,
+            @PathParam("senha") String senha) throws Exception {
+        
+        JSONObject j = new JSONObject();
+        try {
+            TOUser t = new TOUser();
+            
+            t.setLogin(login);
+            t.setSenha(senha);
+            
+            
+            t = (TOUser) BOFactory.check(new DAOUser(), t);
 
+            if (t == null) {
+                j.put("success", false);
+                j.put("message", "Usu&aacute;rio n&atilde;o encontrado");
+            } else {
+                j.put("login", t.getLogin());
+                j.put("success", true);
+            }
+
+        } catch (Exception e) {
+            j.put("success", false);
+            j.put("message", e.getMessage());
+        }
+
+        return j.toString();
+    }
+    
+    
 }
