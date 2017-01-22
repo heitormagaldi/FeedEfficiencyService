@@ -35,13 +35,15 @@ Exemplo.prototype = {
             var table = '<table class="table table-bordered table-hover table-striped">';
             table += '<thead>';
             table += '<tr>';
-            table += '<th>Codigo</th>';
+            //table += '<th>Codigo</th>';
             table += '<th>Registro</th>';
             table += '<th>Manejo</th>';
-            table += '<th>Ra&ccedil;a</th>';
+            //table += '<th>Ra&ccedil;a</th>';
             table += '<th>Nascimento</th>';
             table += '<th>Nome</th>';
-            table += '<th>Sexo</th>';
+            table += '<th>Tipo</th>';
+            table += '<th></th>';
+            table += '<th></th>';
             table += '</tr>';
             table += '</thead>';
             table += '<tbody>';
@@ -57,13 +59,21 @@ Exemplo.prototype = {
                         table += '<tr class="active">';
                     }
                 }
-                table += '<td>' + data.list[i].codigo + '</td>';
+                //table += '<td>' + data.list[i].codigo + '</td>';
                 table += '<td>' + data.list[i].registro + '</td>';
                 table += '<td>' + data.list[i].manejo + '</td>';
-                table += '<td>' + data.list[i].raca + '</td>';
+                //table += '<td>' + data.list[i].raca + '</td>';
                 table += '<td>' + data.list[i].nascimento + '</td>';
                 table += '<td>' + data.list[i].nome + '</td>';
-                table += '<td>' + data.list[i].sexo + '</td>';
+                
+                if (data.list[i].sexo == 'F') {
+                    table += '<td>Novilha</td>';
+                }else{
+                    table += '<td>Touro</td>';
+                }
+                
+                table += '<td><a href="formAnimal.jsp?codigo='+data.list[i].codigo+'"><i class="fa fa-fw fa fa-pencil-square-o"></i></a></td>';
+                table += '<td><a href="/forms.html&teste"><i class="fa fa-fw fa-times"></i></a></td>';
                 table += '</tr>';
             }
             table += '</tbody>';
