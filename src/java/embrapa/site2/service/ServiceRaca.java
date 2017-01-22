@@ -37,7 +37,7 @@ public class ServiceRaca {
         JSONObject j = new JSONObject();
         try {
             JSONArray ja = BOFactory.list(new DAORaca());
-            j.put("data", ja);
+            j.put("list", ja);
             j.put("success", true);
         } catch (Exception e) {
             j.put("success", false);
