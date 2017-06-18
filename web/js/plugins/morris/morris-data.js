@@ -195,33 +195,65 @@ $(function() {
     // Bar Chart
     Morris.Bar({
         element: 'morris-bar-chart',
-        data: [{
-            device: 'iPhone',
-            geekbench: 136
-        }, {
-            device: 'iPhone 3G',
-            geekbench: 137
-        }, {
-            device: 'iPhone 3GS',
-            geekbench: 275
-        }, {
-            device: 'iPhone 4',
-            geekbench: 380
-        }, {
-            device: 'iPhone 4S',
-            geekbench: 655
-        }, {
-            device: 'iPhone 5',
-            geekbench: 1571
-        }],
+        data: [
+		{device: 'Animal 1',car: 1,gpr: 2,cgpr: 6,eca: 5}, 
+		{device: 'Animal 2',car: 1,gpr: 2,cgpr: 7,eca: 5},
+		{device: 'Animal 3',car: 1,gpr: 2,cgpr: 8,eca: 5},
+		{device: 'Animal 4',car: 1,gpr: 2,cgpr: 9,eca: 5},
+		{device: 'Animal 5',car: 1,gpr: 2,cgpr: 2,eca: 5},
+		{device: 'Animal 6',car: 1,gpr: 2,cgpr: 6,eca: 5}, 
+		{device: 'Animal 7',car: 1,gpr: 2,cgpr: 7,eca: 5},
+		{device: 'Animal 8',car: 1,gpr: 2,cgpr: 8,eca: 5},
+		{device: 'Animal 9',car: 1,gpr: 2,cgpr: 9,eca: 5},
+		{device: 'Animal 10',car: 1,gpr: 2,cgpr: 2,eca: 5},
+		{device: 'Animal 11',car: 1,gpr: 2,cgpr: 6,eca: 5}, 
+		{device: 'Animal 12',car: 1,gpr: 2,cgpr: 7,eca: 5},
+		{device: 'Animal 13',car: 1,gpr: 2,cgpr: 8,eca: 5},
+		{device: 'Animal 14',car: 1,gpr: 2,cgpr: 9,eca: 5},
+		{device: 'Animal 15',car: 1,gpr: 2,cgpr: 2,eca: 5},
+		{device: 'Animal 16',car: 1,gpr: 2,cgpr: 6,eca: 5}, 
+		{device: 'Animal 17',car: 1,gpr: 2,cgpr: 7,eca: 5},
+		{device: 'Animal 18',car: 1,gpr: 2,cgpr: 8,eca: 5}],
         xkey: 'device',
-        ykeys: ['geekbench'],
-        labels: ['Geekbench'],
+        ykeys: ['car','gpr','cgpr','eca'],
+        labels: ['CAR','GPR','CGPR','ECA'],
         barRatio: 0.4,
         xLabelAngle: 35,
         hideHover: 'auto',
         resize: true
     });
+	
+	Morris.Bar({
+        element: 'morris-bar-chart2',
+        data: [
+		{device: 'Animal 19',car: 1,gpr: 2,cgpr: 9,eca: 5},
+		{device: 'Animal 20',car: 1,gpr: 2,cgpr: 2,eca: 5},
+		{device: 'Animal 21',car: 1,gpr: 2,cgpr: 6,eca: 5}, 
+		{device: 'Animal 22',car: 1,gpr: 2,cgpr: 7,eca: 5},
+		{device: 'Animal 23',car: 1,gpr: 2,cgpr: 8,eca: 5},
+		{device: 'Animal 24',car: 1,gpr: 2,cgpr: 9,eca: 5},
+		{device: 'Animal 25',car: 1,gpr: 2,cgpr: 2,eca: 5},
+		{device: 'Animal 26',car: 1,gpr: 2,cgpr: 2,eca: 5},
+		{device: 'Animal 27',car: 1,gpr: 2,cgpr: 6,eca: 5}, 
+		{device: 'Animal 28',car: 1,gpr: 2,cgpr: 7,eca: 5},
+		{device: 'Animal 29',car: 1,gpr: 2,cgpr: 8,eca: 5},
+		{device: 'Animal 30',car: 1,gpr: 2,cgpr: 9,eca: 5},
+		{device: 'Animal 31',car: 1,gpr: 2,cgpr: 2,eca: 5},
+		{device: 'Animal 32',car: 1,gpr: 2,cgpr: 2,eca: 5},
+		{device: 'Animal 33',car: 1,gpr: 2,cgpr: 6,eca: 5}, 
+		{device: 'Animal 34',car: 1,gpr: 2,cgpr: 7,eca: 5},
+		{device: 'Animal 35',car: 1,gpr: 2,cgpr: 8,eca: 5},
+		{device: 'Animal 36',car: 1,gpr: 2,cgpr: 9,eca: 5}],
+        xkey: 'device',
+        ykeys: ['car','gpr','cgpr','eca'],
+        labels: ['CAR','GPR','CGPR','ECA'],
+        barRatio: 0.4,
+        xLabelAngle: 35,
+        hideHover: 'auto',
+        resize: true
+    });
+	
+			
 
 
 });

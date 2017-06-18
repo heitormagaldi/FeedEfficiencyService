@@ -22,6 +22,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import javafx.scene.control.Alert;
+import javax.servlet.http.HttpSession;
 import static javax.ws.rs.core.HttpHeaders.USER_AGENT;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +32,8 @@ import org.json.JSONObject;
  * @author Heitor
  */
 @WebServlet(name = "login", urlPatterns = {"/login"})
+
+
 public class login extends HttpServlet {
 
     @Override
@@ -45,9 +48,12 @@ public class login extends HttpServlet {
         }
 
         if (retornoHttp == null) {
+            /*request.setAttribute("falha", "Erro de Autenticação");
+            request.getRequestDispatcher("index.html");
+            */
             response.setContentType("text/html;charset=UTF-8");
             try (PrintWriter out = response.getWriter()) {
-                /* TODO output your page here. You may use following sample code. */
+                
                 out.println("<!DOCTYPE html>");
                 out.println("<html>");
                 out.println("<head>");
@@ -69,12 +75,17 @@ public class login extends HttpServlet {
             try {
                 JSONObject j = new JSONObject(retornoHttp);
                 if (j.getBoolean("success")) {
+                    HttpSession session = request.getSession();
+                    session.setAttribute("login", request.getParameter("login"));
                     request.setAttribute("login", request.getParameter("login"));
                     request.getRequestDispatcher("principal.jsp").forward(request, response);
                 } else {
+                    /*request.setAttribute("falha", "Erro de Autenticação");
+                    request.getRequestDispatcher("index.html");*/
+                    
                     response.setContentType("text/html;charset=UTF-8");
                     try (PrintWriter out = response.getWriter()) {
-                        /* TODO output your page here. You may use following sample code. */
+                        
                         out.println("<!DOCTYPE html>");
                         out.println("<html>");
                         out.println("<head>");

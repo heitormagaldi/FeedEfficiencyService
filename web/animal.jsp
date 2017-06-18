@@ -13,7 +13,9 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-
+        
+        <%@include file="ValidaSessao.jsp" %>
+        
         <title>Cadastro de Animais</title>
 
         <!-- Bootstrap Core CSS -->
@@ -24,7 +26,7 @@
         <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
 
         <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-        
+
         <script src="js/bootstrap.min.js"></script>
         <script type = "text/javascript" src="js/jquery-1.7.min.js"></script>
         <script type = "text/javascript" src="js/jsUtil.js"></script>
@@ -57,7 +59,7 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong>John Smith</strong>
+                                            <h5 class="media-heading"><strong><%= session.getAttribute("login") %></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -72,7 +74,7 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong>John Smith</strong>
+                                            <h5 class="media-heading"><strong><%= session.getAttribute("login") %></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -87,7 +89,7 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong>John Smith</strong>
+                                            <h5 class="media-heading"><strong><%= session.getAttribute("login") %></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -128,7 +130,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= session.getAttribute("login") %><b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
@@ -150,14 +152,8 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav side-nav">
                         <li>
-                            <a href="principal.jsp"><i class="fa fa-fw fa-dashboard"></i> Retornar a Principal</a>
+                            <a href="principal.jsp"><i class="fa fa-fw fa-dashboard"></i> P&aacute;gina Principal</a>
                         </li>
-                        <li>
-                            <a href="charts.html"><i class="fa fa-pencil"></i> Atualizar Cadastro</a>
-                        </li>
-                        
-                       
-
                     </ul>
                 </div>
                 <!-- /.navbar-collapse -->
@@ -169,7 +165,7 @@
 
                     <!-- Page Heading -->
                     <div class="row">
-                         <div class="col-lg-12">
+                        <div class="col-lg-12">
                             <h1 class="page-header">
                                 Cadastro de Animais
                             </h1>
@@ -184,25 +180,25 @@
                         </div>
                     </div>
                     <div class="row">
-                    <div class="col-lg-6">
-                           <div class="table-responsive">
-                            <div id ="listanimais"></div>
-                        </div>
-                    </div>  
+                        <div class="col-lg-12">
+                            <div class="table-responsive">
+                                <div id ="listanimais"></div>
+                            </div>
+                        </div>  
+                    </div>
+                    <!-- /.row -->
+
                 </div>
-                <!-- /.row -->
+                <!-- /.container-fluid -->
 
             </div>
-            <!-- /.container-fluid -->
+            <!-- /#page-wrapper -->
 
         </div>
-        <!-- /#page-wrapper -->
-
-    </div>
-    <!-- /#wrapper -->
+        <!-- /#wrapper -->
 
 
-</body>
+    </body>
 </html>
 
 

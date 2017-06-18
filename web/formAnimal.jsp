@@ -4,6 +4,8 @@
     Author     : Heitor
 --%>
 
+<%@page import="embrapa.dao.DAOCobertura"%>
+<%@page import="embrapa.to.TOCobertura"%>
 <%@page import="java.io.IOException"%>
 <%@page import="org.json.JSONArray"%>
 <%@page import="embrapa.dao.DAORaca"%>
@@ -26,6 +28,33 @@
 
     JSONArray jsRacas = BOFactory.list(new DAORaca());
 
+    TOCobertura toCobertura = new TOCobertura();
+    toCobertura.setCodigo(t.getCobertura());
+
+    toCobertura = (TOCobertura) BOFactory.get(new DAOCobertura(), toCobertura);
+    if (toCobertura == null) {
+        toCobertura = new TOCobertura();
+    }
+    
+    
+    TOAnimal toMae = new TOAnimal();
+    TOAnimal toPai = new TOAnimal();
+
+    TOAnimal toReceptora = new TOAnimal();
+    toReceptora.setCodigo(toCobertura.getReceptora());
+    toReceptora = (TOAnimal) BOFactory.get(new DAOAnimal(), toReceptora);
+
+    toMae.setCodigo(toCobertura.getMae());
+    toMae = (TOAnimal) BOFactory.get(new DAOAnimal(), toMae);
+    if (toMae == null) {
+        toMae = new TOAnimal();
+    }
+
+    toPai.setCodigo(toCobertura.getPai());
+    toPai = (TOAnimal) BOFactory.get(new DAOAnimal(), toPai);
+    if (toPai == null) {
+        toPai = new TOAnimal();
+    }
 %>
 
 <html lang="en">
@@ -37,7 +66,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-
+        <%@include file="ValidaSessao.jsp" %>
 
         <title>Cadastro de Animal</title>
 
@@ -91,7 +120,7 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong>John Smith</strong>
+                                            <h5 class="media-heading"><strong><%= session.getAttribute("login") %></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -106,7 +135,7 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong>John Smith</strong>
+                                            <h5 class="media-heading"><strong><%= session.getAttribute("login") %></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -121,7 +150,7 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong>John Smith</strong>
+                                            <h5 class="media-heading"><strong> <%= session.getAttribute("login") %></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -162,7 +191,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> John Smith <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= session.getAttribute("login") %><b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
@@ -184,7 +213,8 @@
                 <div class="collapse navbar-collapse navbar-ex1-collapse">
                     <ul class="nav navbar-nav side-nav">
                         <li>
-                            <a href="principal.jsp"><i class="fa fa-fw fa-dashboard"></i> Principal</a>
+
+                            <a href="animal.jsp"><i class="fa fa-fw fa-reply"></i> Retornar</a>
                         </li>
                     </ul>
                 </div>
@@ -215,7 +245,7 @@
                     <!-- /.row -->
                     <form action="formAnimal" method="POST">
                         <div class="row">
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label>C&oacute;digo do Animal</label>
 
@@ -270,13 +300,9 @@
                                            value="<%=t.getNascimento()%>"></input>
                                 </div>
 
-                                <button type="submit" class="btn btn-default">Gravar</button>
-                                <button type="reset" class="btn btn-default" onclick="history.back()">Cancelar</button>
-
-
 
                             </div>
-                            <div class="col-lg-6">
+                            <div class="col-lg-3">
                                 <div class="form-group">
                                     <label>Ra&ccedil;a </label>
                                     <%
@@ -351,28 +377,277 @@
                                     </div>   
 
                                     <%
+                                            }
                                         }
                                     %>
 
 
                                 </div>
+                                <div class="form-group">
+                                    <label>Tipo de Cobertura</label>
+                                    <% if (toCobertura.getTipo().equals("TE")) {%>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="opt_cobertura" id="optionsRadios1" value="option1" checked>TE
+                                        </label>
+                                    </div>    
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="opt_cobertura" id="optionsRadios1" value="option1" >IA
+                                        </label>
+                                    </div>    
 
-                                <%                                        }
-                                %>
+                                    <%} else {
+                                        if (toCobertura.getTipo().equals("IA")) { %>
+
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="opt_cobertura" id="optionsRadios1" value="option1" >TE
+                                        </label>
+                                    </div>    
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="opt_cobertura" id="optionsRadios1" value="option1" checked>IA
+                                        </label>
+                                    </div>   
+
+                                    <% } else {
+                                    %>
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="opt_cobertura" id="optionsRadios1" value="option1" >TE
+                                        </label>
+                                    </div>    
+                                    <div class="radio">
+                                        <label>
+                                            <input type="radio" name="opt_cobertura" id="optionsRadios1" value="option1" >IA
+                                        </label>
+                                    </div>    
+
+                                    <%
+                                            }
+                                        }
+                                    %>
+
+
+                                </div>
+                                <div class="form-group">
+                                    <label>Data da Cobertura</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o C&oacute;digo" 
+                                           value="<%=toCobertura.getData()%>"></input>
+                                </div>
+
+
                             </div>
-                        </div>            
-                </div>
-                </form>  
-                <!-- /.row -->
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>C&oacute;digo do Pai</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o C&oacute;digo" 
+                                           value="<%=toPai.getCodigo()%>"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nome do Pai</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o nome" 
+                                           value="<%=toPai.getNome()%>"></input>
+                                </div>
 
+
+                                <div class="form-group">
+                                    <label>Registro do Pai</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o registro" 
+                                           value="<%=toPai.getRegistro()%>"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Manejo do Pai</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o registro" 
+                                           value="<%=toPai.getManejo()%>"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nascimento do Pai</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o registro" 
+                                           value="<%=toPai.getNascimento()%>"></input>
+                                </div>
+
+
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="form-group">
+                                    <label>C&oacute;digo da M&atilde;e</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o C&oacute;digo" 
+                                           value="<%=toMae.getCodigo()%>"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nome da M&atilde;e</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o nome" 
+                                           value="<%=toMae.getNome()%>"></input>
+                                </div>
+
+
+                                <div class="form-group">
+                                    <label>Registro da M&atilde;e</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o registro" 
+                                           value="<%=toMae.getRegistro()%>"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Manejo da M&atilde;e</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o registro" 
+                                           value="<%=toMae.getManejo()%>"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nascimento da M&atilde;e</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o registro" 
+                                           value="<%=toMae.getNascimento()%>"></input>
+                                </div>
+
+
+                                <%if (toCobertura.getTipo().equals("TE")) {%>
+                                <div class="form-group">
+                                    <label>_______________________________________</label>
+                                </div>
+                                <div class="form-group">
+                                    <label>C&oacute;digo da Receptora</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height" 
+                                           for="inputWarning"
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o C&oacute;digo" 
+                                           value="<%=toReceptora.getCodigo()%>"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Nome da Receptora</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height"
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o nome" 
+                                           value="<%=toReceptora.getNome()%>"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Nome da Receptora</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height"
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o nome" 
+                                           value="<%=toReceptora.getNome()%>"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Registro da Receptora</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height"
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o registro" 
+                                           value="<%=toReceptora.getRegistro()%>"></input>
+                                </div>
+
+                                <div class="form-group">
+                                    <label>Manejo da Receptora</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height"
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o registro" 
+                                           value="<%=toReceptora.getManejo()%>"></input>
+                                </div>
+                                <div class="form-group">
+                                    <label>Nascimento da Receptora</label>
+                                    <input type="text" 
+                                           name="txt_dtCobertura" 
+                                           id="txt_event_title"  
+                                           class="form-control custom-height"
+                                           autocomplete="off" 
+                                           placeholder="Preencher com o registro" 
+                                           value="<%=toReceptora.getNascimento()%>"></input>
+                                </div>
+                                <%}%>
+                            </div>
+
+
+                        </div>
+                        <button type="submit" class="btn btn-default">Gravar</button>
+                        <button type="reset" class="btn btn-default" onclick="history.back()">Cancelar</button>   
+                </div>            
             </div>
-            <!-- /.container-fluid -->
 
-        </div>
-        <!-- /#page-wrapper -->
+
+        </form>  
+        <!-- /.row -->
 
     </div>
-    <!-- /#wrapper -->
+    <!-- /.container-fluid -->
+
+</div>
+<!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
 
 
 

@@ -42,8 +42,10 @@ Exemplo.prototype = {
             table += '<th>Nascimento</th>';
             table += '<th>Nome</th>';
             table += '<th>Tipo</th>';
-            table += '<th></th>';
-            table += '<th></th>';
+            table += '<th>Editar</th>';
+            table += '<th>Remover</th>';
+            
+
             table += '</tr>';
             table += '</thead>';
             table += '<tbody>';

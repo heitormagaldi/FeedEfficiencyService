@@ -52,9 +52,12 @@ public class formAnimal extends HttpServlet {
         return "Short description";
     }// </editor-fold>
 
-    private String sendPost(String login, String senha) throws Exception {
+    private String sendPost(Integer codigo, String registro, String manejo,
+            String nome, String nascimento, Integer raca,
+            Integer cobertura, String sexo) throws Exception {
 
-        String url = "http://localhost:8084/embrapa.site2/services/animal/update/" + login + "," + senha;
+        String url = "http://localhost:8084/embrapa.site2/services/animal/update/" + codigo + "," + registro + ","
+                + manejo + "," + raca + "," + cobertura + "," + "," + nascimento + nome + "," + sexo;
         URL obj = new URL(url);
         HttpURLConnection con = (HttpURLConnection) obj.openConnection();
 

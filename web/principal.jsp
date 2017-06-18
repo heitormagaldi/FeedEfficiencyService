@@ -8,7 +8,7 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="description" content="">
         <meta name="author" content="">
-
+        <%@include file="ValidaSessao.jsp" %>
         <title>Sistema AgroPROV</title>
 
         <!-- Bootstrap Core CSS -->
@@ -60,7 +60,22 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong><%= request.getAttribute("login") %></strong>
+                                            <%--<h5 class="media-heading"><strong><%= request.getAttribute("login")%></strong></h5>--%>
+                                            <h5 class="media-heading"><strong><%= session.getAttribute("login")%></strong></h5>
+                                            <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
+                                            <p>Lorem ipsum dolor sit amet, consectetur...</p>
+                                        </div>
+                                    </div>
+                                </a>
+                            </li>
+                            <li class="message-preview">
+                                <a href="#">
+                                    <div class="media">
+                                        <span class="pull-left">
+                                            <img class="media-object" src="http://placehold.it/50x50" alt="">
+                                        </span>
+                                        <div class="media-body">
+                                            <h5 class="media-heading"><strong><%= session.getAttribute("login")%></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -75,22 +90,7 @@
                                             <img class="media-object" src="http://placehold.it/50x50" alt="">
                                         </span>
                                         <div class="media-body">
-                                            <h5 class="media-heading"><strong><%= request.getAttribute("login") %></strong>
-                                            </h5>
-                                            <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
-                                            <p>Lorem ipsum dolor sit amet, consectetur...</p>
-                                        </div>
-                                    </div>
-                                </a>
-                            </li>
-                            <li class="message-preview">
-                                <a href="#">
-                                    <div class="media">
-                                        <span class="pull-left">
-                                            <img class="media-object" src="http://placehold.it/50x50" alt="">
-                                        </span>
-                                        <div class="media-body">
-                                            <h5 class="media-heading"><strong><%= request.getAttribute("login") %></strong>
+                                            <h5 class="media-heading"><strong><%= session.getAttribute("login")%></strong>
                                             </h5>
                                             <p class="small text-muted"><i class="fa fa-clock-o"></i> Yesterday at 4:32 PM</p>
                                             <p>Lorem ipsum dolor sit amet, consectetur...</p>
@@ -131,7 +131,7 @@
                         </ul>
                     </li>
                     <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= request.getAttribute("login") %> <b class="caret"></b></a>
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="fa fa-user"></i> <%= session.getAttribute("login")%> <b class="caret"></b></a>
                         <ul class="dropdown-menu">
                             <li>
                                 <a href="#"><i class="fa fa-fw fa-user"></i> Perfil</a>
@@ -144,7 +144,7 @@
                             </li>
                             <li class="divider"></li>
                             <li>
-                                <a href="#"><i class="fa fa-fw fa-power-off"></i> Sair</a>
+                                <a href="index.html"><i class="fa fa-fw fa-power-off"></i> Sair</a>
                             </li>
                         </ul>
                     </li>
@@ -180,16 +180,16 @@
                         <li>
                             <a href="blank-page.html"><i class="fa fa-fw fa-bar-chart-o"></i> Estat&iacute;sticas</a>
                         </li>
-                        
+
                         <li>
                             <a href="ImportarArquivos.html"><i class="fa fa-upload"></i> Importa&ccedil;&atilde;o </a>
                         </li>
                         <li>
                             <a href="blank-page.html"><i class="fa fa-fw fa-table"></i> Dados Prim&aacute;rios</a>
                         </li>
-                        
-                        
-                        
+
+
+
 
                     </ul>
                 </div>
@@ -219,7 +219,7 @@
                         <div class="col-lg-12">
                             <div class="alert alert-info alert-dismissable">
                                 <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
-                                <i class="fa fa-info-circle"></i>  <strong><%= request.getAttribute("login") %> </strong> fique atento as novas  <a href="http://startbootstrap.com/template-overviews/sb-admin-2" target="_blank" class="alert-link">Funcionalidades</a> !!
+                                <i class="fa fa-info-circle"></i>  <strong><%= session.getAttribute("login")%> </strong> fique atento as novas  <a href="http://startbootstrap.com/template-overviews/sb-admin-2" target="_blank" class="alert-link">Funcionalidades</a> !!
                             </div>
                         </div>
                     </div>

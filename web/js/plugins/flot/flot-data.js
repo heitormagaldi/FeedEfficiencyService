@@ -48,6 +48,10 @@ $(document).ready(function() {
                 label: "cos(x)"
             }],
             options);
+			
+			
+			
+			
     }
 });
 
