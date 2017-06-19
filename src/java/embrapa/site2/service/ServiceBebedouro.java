@@ -216,4 +216,23 @@ public class ServiceBebedouro {
         j.put("sucess", true);
         return j.toString();
     }
+    @GET
+    @Path("count")
+    public String count() throws Exception {
+        /*public String update(@FormParam("id") String id) throws Exception {*/
+        JSONObject j = new JSONObject();
+        try {
+            
+            int lnretorno = BOFactory.count(new DAOBebedouro());
+            
+            j.put("quantidade", lnretorno);
+                       
+
+        } catch (Exception e) {
+            j.put("quantidade", 0);
+            j.put("message", e.getMessage());
+        }
+
+        return j.toString();
+    }
 }

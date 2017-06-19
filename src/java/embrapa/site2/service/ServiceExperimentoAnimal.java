@@ -24,7 +24,7 @@ import org.json.JSONObject;
  *
  * @author Heitor
  */
-@Path("Experimento_Animal")
+@Path("experimento_animal")
 public class ServiceExperimentoAnimal {
     public ServiceExperimentoAnimal() {
     }
@@ -155,6 +155,25 @@ public class ServiceExperimentoAnimal {
 
         } catch (Exception e) {
             j.put("success", false);
+            j.put("message", e.getMessage());
+        }
+
+        return j.toString();
+    }
+    @GET
+    @Path("count")
+    public String count() throws Exception {
+        /*public String update(@FormParam("id") String id) throws Exception {*/
+        JSONObject j = new JSONObject();
+        try {
+            
+            int lnretorno = BOFactory.count(new DAOExperimento_Animal());
+            
+            j.put("quantidade", lnretorno);
+                       
+
+        } catch (Exception e) {
+            j.put("quantidade", 0);
             j.put("message", e.getMessage());
         }
 

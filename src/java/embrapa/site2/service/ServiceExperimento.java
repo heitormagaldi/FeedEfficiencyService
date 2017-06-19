@@ -169,7 +169,7 @@ public class ServiceExperimento {
             t.setCodigo(codigo);
 
             t = (TOExperimento) BOFactory.get(new DAOExperimento(), t);
-
+              
             if (t == null) {
                 j.put("success", false);
                 j.put("message", "Animal não encontrado");
@@ -180,6 +180,26 @@ public class ServiceExperimento {
 
         } catch (Exception e) {
             j.put("success", false);
+            j.put("message", e.getMessage());
+        }
+
+        return j.toString();
+    }
+    
+    @GET
+    @Path("count")
+    public String count() throws Exception {
+        /*public String update(@FormParam("id") String id) throws Exception {*/
+        JSONObject j = new JSONObject();
+        try {
+            
+            int lnretorno = BOFactory.count(new DAOExperimento());
+            
+            j.put("quantidade", lnretorno);
+                       
+
+        } catch (Exception e) {
+            j.put("quantidade", 0);
             j.put("message", e.getMessage());
         }
 
