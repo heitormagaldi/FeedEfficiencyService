@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package embrapa.site2.service;
+
 import static com.hp.hpl.jena.assembler.JA.FileManager;
 import embrapa.bo.BOFactory;
 import embrapa.dao.DAOAnimal;
@@ -19,7 +20,6 @@ import javax.ws.rs.PathParam;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
 
 import com.hp.hpl.jena.ontology.ObjectProperty;
 import com.hp.hpl.jena.ontology.OntClass;
@@ -37,9 +37,11 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.rdf.model.StmtIterator;
 import com.hp.hpl.jena.reasoner.Reasoner;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.apache.jasper.tagplugins.jstl.core.ForEach;
 import org.eclipse.jdt.internal.compiler.batch.Main;
 import org.mindswap.pellet.jena.PelletReasonerFactory;
 
@@ -47,18 +49,18 @@ import org.mindswap.pellet.jena.PelletReasonerFactory;
  *
  * @author Heitor
  */
-@Path("ontologia")
+//http://localhost:8084/embrapa.site2/services/ont/list
+@Path("ont")
 public class ServiceOntologia {
-    
+
     public static final String lcURI = "http://www.semanticweb.org/heitor/ontologies/2016/6/Embrapa#";
-    private static final String lcOntology = "file:///C:/Embrapa.owl";
-      //variavel para acesso à ontologia com inferencia
+    private static final String lcOntology = "file:///D:/EmbrapaCleanV1_22082017.owl";
+    //variavel para acesso à ontologia com inferencia
     private final InfModel infModel;
     //variavel para acesso à ontologia sem inferencia
     private final OntModel ontModel;
-    
-    
-    public ServiceOntologia(){
+
+    public ServiceOntologia() {
         Model model = ModelFactory.createDefaultModel();
         model.read(lcOntology);
 
@@ -68,145 +70,457 @@ public class ServiceOntologia {
         Reasoner reasoner = PelletReasonerFactory.theInstance().create();
         infModel = ModelFactory.createInfModel(reasoner, model);
         infModel.prepare();
-        
-        
+
     }
-    
-    
-    public static List<TOAnimal> GadosExperimento(String NomeExperimento){
-        
-        
-        List<TOAnimal> ListAnimais = new ArrayList<TOAnimal>();
-        String NomeInstancia,Nome,Sexo,Numero,InstanciaCobertura,DataCobertura,ReceptorCobertura,TipoCobertura;
-        String RGD,Nascimento; 
-        
-        Model model;
-        String queryString;
-        Query query;
-               
-       mexer................... 
-        queryString =    "PREFIX owl:<http://www.w3.org/2002/07/owl#>\n"+
-                                "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"+
-                                "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"+
-                                "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n" +
-                                "PREFIX embrapa: <http://www.semanticweb.org/heitor/ontologies/2016/6/Embrapa#>\n" +
-                                "SELECT distinct ?InstanciaGado ?Nome ?Numero?Sexo ?InstanciaCobertura?DataCobertura?Receptor ?RGD ?Nascimento "+
-                                "WHERE {?"+NomeExperimento.trim()+" embrapa:hasParticipant ?InstanciaGado.\n"+
-                                "?InstanciaGado embrapa:Cattle_Name ?Nome.\n"+
-                                "?InstanciaGado embrapa:Cattle_Number ?Numero.\n"+
-                                "?InstanciaGado embrapa:Cattle_Sex ?Sexo.\n"+
-                                "?InstanciaGado embrapa:Cattle_RGD ?RGD.\n"+
-                                "?InstanciaGado embrapa:Cattle_Birth ?Nascimento.\n"+
-                                "?InstanciaGado embrapa:GenerateBy ?InstanciaCobertura. \n" +
-                                "?InstanciaCobertura embrapa:Coverage_Date ?DataCobertura.\n" +
-                                "OPTIONAL{?InstanciaCobertura embrapa:Coverage_Receive ?Receptor.}}";
-   
-        
-        query = QueryFactory.create(queryString);
-        try(QueryExecution qexec = QueryExecutionFactory.create(query,model)) {
-            ResultSet results = qexec.execSelect();
-            while( results.hasNext() ){
-                QuerySolution soln = results.nextSolution();
-                //Resource name = soln.getResource("subClass");
-                String InstanciaGado  = soln.toString();
-                InstanciaGado = InstanciaGado.substring(InstanciaGado.indexOf("#")+1, InstanciaGado.indexOf(">"));
-                 
-                NomeInstancia = InstanciaGado;
-                Nome = soln.getLiteral("Nome").getString();
-                Numero = soln.getLiteral("Numero").getString();
-                Sexo = soln.getLiteral("Sexo").getString();
-                RGD = soln.getLiteral("RGD").getString();
-                Nascimento = soln.getLiteral("Nascimento").getString();
-                
-                String InstanciaCoberturaTemp  = soln.toString();
-                
-                int InicioCorte = InstanciaCoberturaTemp.indexOf("InstanciaCobertura = <http://www.semanticweb.org/heitor/ontologies/2016/6/Embrapa#")+82;
-                int FimCorte = InstanciaCoberturaTemp.indexOf("> ) ( ?DataCobertura = " );
-                        
-                        
-                InstanciaCobertura = InstanciaCoberturaTemp.substring(InicioCorte,FimCorte);
-                               
-                switch (InstanciaCobertura.substring(0, 2)){
-                    
-                case "TE":
-                    TipoCobertura = "TRANSFERÊNCIA DE EMBRIÃO";
-                    ReceptorCobertura = soln.getLiteral("Receptor").getString();
-                    break;
-                case "ET":
-                    TipoCobertura = "TRANSFERÊNCIA DE EMBRIÃO";
-                    ReceptorCobertura = soln.getLiteral("Receptor").getString();
-                    break;    
-                case "IA":
-                    TipoCobertura = "INSEMINAÇÃO ARTIFICIAL";
-                    ReceptorCobertura = "";
-                    break;    
-                case "AI":
-                    TipoCobertura = "INSEMINAÇÃO ARTIFICIAL";
-                    ReceptorCobertura = "";
-                    break;    
-                default:
-                    TipoCobertura = "N/D";
-                    ReceptorCobertura = "";
-                    break;     
-                }
-                
-                 
-                DataCobertura = soln.getLiteral("DataCobertura").getString();
-                
-                        
-                ListGados.add(new Gado(NomeInstancia,Numero,Sexo,Nome,
-                        TipoCobertura,DataCobertura,ReceptorCobertura,
-                        InstanciaCobertura,RGD,Nascimento));
-                
-                
-                
-            }
-        }
-        return ListGados;
-        
-    }
-    
-    
-    
+
     @GET
-    @Path("list")
-    public String GraficoLinha() throws JSONException {
-        JSONObject j = new JSONObject();
-          
+    @Path("CAR")
+    public String ClassificacaoCAR() throws Exception {
+        List<TOAnimal> lstAnimaisEficentes = GetCAR(1);
+        List<TOAnimal> lstAnimaisIneficentes = GetCAR(2);
+        List<TOAnimal> lstAnimaisIntermediarios = GetCAR(3);
+
+        JSONArray ja = new JSONArray();
         
+        JSONObject j2 = new JSONObject();
+        
+        for (TOAnimal animal : lstAnimaisEficentes) {
+            ja.put(animal.getJson());
+        }
+        j2.put("eficientes", ja);
+        ja = new JSONArray();
+        
+        for (TOAnimal animal : lstAnimaisIntermediarios) {
+            ja.put(animal.getJson());
+        }
+        j2.put("intermediarios", ja);
+        ja = new JSONArray();
+        
+        for (TOAnimal animal : lstAnimaisIneficentes) {
+            ja.put(animal.getJson());
+        }
+        j2.put("ineficientes", ja);
+        
+        JSONObject j = new JSONObject();
+
         try {
-            JSONArray ja = BOFactory.list(new DAOAnimal());
-            j.put("list", ja);
+            j.put("CAR", j2);
+            //j.put("list", ja);
             j.put("success", true);
         } catch (Exception e) {
             j.put("success", false);
             j.put("message", e.getMessage());
         }
+
         return j.toString();
+
     }
     
-    public List<String> sparqlGetIndividualsByClassInf(String prefix, String entidade) {
-        String queryStr = "PREFIX : <" + lcURI + "> \n"
-                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> \n"
-                + "SELECT DISTINCT ?" + entidade + "\n"
-                + "WHERE { \n"
-                + " ?" + entidade + " rdf:type :" + entidade + " . \n"
-                + " }  \n";
+    @GET
+    @Path("ECA")
+    public String ClassificacaoECA() throws Exception {
+        List<TOAnimal> lstAnimaisEficentes = GetECA(1);
+        List<TOAnimal> lstAnimaisIneficentes = GetECA(2);
+        List<TOAnimal> lstAnimaisIntermediarios = GetECA(3);
 
-        Query query = QueryFactory.create(queryStr);
-        QueryExecution execution = QueryExecutionFactory.create(query, infModel);
-        ResultSet results = execution.execSelect();
-        List<String> list = new ArrayList<>();
-        while (results.hasNext()) {
-            QuerySolution qs = results.next();
-            Resource resource = qs.getResource("?" + entidade + "");
-            if (resource.toString() != null && !resource.toString().equals("null")) {
-                list.add(resource.toString());
+        JSONArray ja = new JSONArray();
+        
+        JSONObject j2 = new JSONObject();
+        
+        for (TOAnimal animal : lstAnimaisEficentes) {
+            ja.put(animal.getJson());
+        }
+        j2.put("eficientes", ja);
+        ja = new JSONArray();
+        
+        for (TOAnimal animal : lstAnimaisIntermediarios) {
+            ja.put(animal.getJson());
+        }
+        j2.put("intermediarios", ja);
+        ja = new JSONArray();
+        
+        for (TOAnimal animal : lstAnimaisIneficentes) {
+            ja.put(animal.getJson());
+        }
+        j2.put("ineficientes", ja);
+        
+        JSONObject j = new JSONObject();
+
+        try {
+            j.put("ECA", j2);
+            //j.put("list", ja);
+            j.put("success", true);
+        } catch (Exception e) {
+            j.put("success", false);
+            j.put("message", e.getMessage());
+        }
+
+        return j.toString();
+
+    }
+    
+    @GET
+    @Path("GPR")
+    public String ClassificacaoGPR() throws Exception {
+        List<TOAnimal> lstAnimaisEficentes = GetGPR(1);
+        List<TOAnimal> lstAnimaisIneficentes = GetGPR(2);
+        List<TOAnimal> lstAnimaisIntermediarios = GetGPR(3);
+
+        JSONArray ja = new JSONArray();
+        
+        JSONObject j2 = new JSONObject();
+        
+        for (TOAnimal animal : lstAnimaisEficentes) {
+            ja.put(animal.getJson());
+        }
+        j2.put("eficientes", ja);
+        ja = new JSONArray();
+        
+        for (TOAnimal animal : lstAnimaisIntermediarios) {
+            ja.put(animal.getJson());
+        }
+        j2.put("intermediarios", ja);
+        ja = new JSONArray();
+        
+        for (TOAnimal animal : lstAnimaisIneficentes) {
+            ja.put(animal.getJson());
+        }
+        j2.put("ineficientes", ja);
+        
+        JSONObject j = new JSONObject();
+
+        try {
+            j.put("GPR", j2);
+            //j.put("list", ja);
+            j.put("success", true);
+        } catch (Exception e) {
+            j.put("success", false);
+            j.put("message", e.getMessage());
+        }
+
+        return j.toString();
+
+    }
+    
+    @GET
+    @Path("CGPR")
+    public String ClassificacaoCGPR() throws Exception {
+        List<TOAnimal> lstAnimaisEficentes = GetCGPR(1);
+        List<TOAnimal> lstAnimaisIneficentes = GetCGPR(2);
+        List<TOAnimal> lstAnimaisIntermediarios = GetCGPR(3);
+
+        JSONArray ja = new JSONArray();
+        
+        JSONObject j2 = new JSONObject();
+        
+        for (TOAnimal animal : lstAnimaisEficentes) {
+            ja.put(animal.getJson());
+        }
+        j2.put("eficientes", ja);
+        ja = new JSONArray();
+        
+        for (TOAnimal animal : lstAnimaisIntermediarios) {
+            ja.put(animal.getJson());
+        }
+        j2.put("intermediarios", ja);
+        ja = new JSONArray();
+        
+        for (TOAnimal animal : lstAnimaisIneficentes) {
+            ja.put(animal.getJson());
+        }
+        j2.put("ineficientes", ja);
+        
+        JSONObject j = new JSONObject();
+
+        try {
+            j.put("CGPR", j2);
+            //j.put("list", ja);
+            j.put("success", true);
+        } catch (Exception e) {
+            j.put("success", false);
+            j.put("message", e.getMessage());
+        }
+
+        return j.toString();
+
+    }
+    
+    /// 1 = Eficiente 2 Ineficiente 3 Intermediario
+    public List<TOAnimal> GetCAR(Integer lnIndice) throws Exception {
+
+        List<TOAnimal> ListAnimais = new ArrayList<TOAnimal>();
+        String NomeInstancia, Nome, Sexo, Numero, InstanciaCobertura, DataCobertura;
+        String RGD, Nascimento;
+        Date dNascimento;
+
+        int Codigo;
+
+        String queryString;
+        Query query;
+
+        queryString = "PREFIX owl:<http://www.w3.org/2002/07/owl#>\n"
+                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX embrapa: <http://www.semanticweb.org/heitor/ontologies/2016/6/Embrapa#>\n"
+                + "SELECT distinct ?Nome ?Numero ?Registro ?Nascimento ?Codigo ";
+        
+        switch (lnIndice) {
+            case 1:
+                queryString += "WHERE {?Cattle a embrapa:Efficient_CAR.\n";
+                break;
+            case 2:
+                queryString += "WHERE {?Cattle a embrapa:Inefficient_CAR.\n";
+                break;
+            case 3:
+                queryString += "WHERE {?Cattle a embrapa:Intermediary_CAR.\n";
+                break;
+        }
+
+        queryString += "?Cattle embrapa:Cattle_Name ?Nome.\n"
+                + "?Cattle embrapa:Cattle_Number ?Numero.\n"
+                + "?Cattle embrapa:Cattle_Birth ?Nascimento.\n"
+                + "?Cattle embrapa:Cattle_RGD ?Registro.\n"
+                + "?Cattle embrapa:Cattle_Code ?Codigo.\n"
+                + "}";
+
+        query = QueryFactory.create(queryString);
+        try (QueryExecution execution = QueryExecutionFactory.create(query, infModel)) {
+            ResultSet results = execution.execSelect();
+            List<String> list = new ArrayList<>();
+
+            while (results.hasNext()) {
+                QuerySolution qs = results.next();
+                String lxGado = qs.toString();
+                Nome = qs.getLiteral("Nome").getString();
+                Numero = qs.getLiteral("Numero").getString();
+                Codigo = Integer.parseInt(qs.getLiteral("Codigo").getString());
+                RGD = qs.getLiteral("Registro").getString();
+                Nascimento = qs.getLiteral("Nascimento").getString();
+
+                DateFormat ConversorDate2 = new SimpleDateFormat("dd-MM-yyyy");
+
+                String dateTemp = Nascimento.substring(0, 2) + "-"
+                        + Nascimento.substring(2, 4) + "-" + Nascimento.substring(4, 8);
+
+                Date dnascimento = new java.sql.Date(ConversorDate2.parse(dateTemp).getTime());
+
+                ListAnimais.add(new TOAnimal(Codigo, RGD, Numero, 0, 0, dnascimento,
+                        Nome, ""));
+
             }
         }
-        execution.close();
 
-        return list;
+        return ListAnimais;
+
+    }
+    /// 1 = Eficiente 2 Ineficiente 3 Intermediario
+    public List<TOAnimal> GetECA(Integer lnIndice) throws Exception {
+
+        List<TOAnimal> ListAnimais = new ArrayList<TOAnimal>();
+        String NomeInstancia, Nome, Sexo, Numero, InstanciaCobertura, DataCobertura;
+        String RGD, Nascimento;
+        Date dNascimento;
+
+        int Codigo;
+
+        String queryString;
+        Query query;
+
+        queryString = "PREFIX owl:<http://www.w3.org/2002/07/owl#>\n"
+                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX embrapa: <http://www.semanticweb.org/heitor/ontologies/2016/6/Embrapa#>\n"
+                + "SELECT distinct ?Nome ?Numero ?Registro ?Nascimento ?Codigo ";
+        
+        switch (lnIndice) {
+            case 1:
+                queryString += "WHERE {?Cattle a embrapa:Efficient_ECA.\n";
+                break;
+            case 2:
+                queryString += "WHERE {?Cattle a embrapa:Inefficient_ECA.\n";
+                break;
+            case 3:
+                queryString += "WHERE {?Cattle a embrapa:Intermediary_ECA.\n";
+                break;
+        }
+
+        queryString += "?Cattle embrapa:Cattle_Name ?Nome.\n"
+                + "?Cattle embrapa:Cattle_Number ?Numero.\n"
+                + "?Cattle embrapa:Cattle_Birth ?Nascimento.\n"
+                + "?Cattle embrapa:Cattle_RGD ?Registro.\n"
+                + "?Cattle embrapa:Cattle_Code ?Codigo.\n"
+                + "}";
+
+        query = QueryFactory.create(queryString);
+        try (QueryExecution execution = QueryExecutionFactory.create(query, infModel)) {
+            ResultSet results = execution.execSelect();
+            List<String> list = new ArrayList<>();
+
+            while (results.hasNext()) {
+                QuerySolution qs = results.next();
+                String lxGado = qs.toString();
+                Nome = qs.getLiteral("Nome").getString();
+                Numero = qs.getLiteral("Numero").getString();
+                Codigo = Integer.parseInt(qs.getLiteral("Codigo").getString());
+                RGD = qs.getLiteral("Registro").getString();
+                Nascimento = qs.getLiteral("Nascimento").getString();
+
+                DateFormat ConversorDate2 = new SimpleDateFormat("dd-MM-yyyy");
+
+                String dateTemp = Nascimento.substring(0, 2) + "-"
+                        + Nascimento.substring(2, 4) + "-" + Nascimento.substring(4, 8);
+
+                Date dnascimento = new java.sql.Date(ConversorDate2.parse(dateTemp).getTime());
+
+                ListAnimais.add(new TOAnimal(Codigo, RGD, Numero, 0, 0, dnascimento,
+                        Nome, ""));
+
+            }
+        }
+
+        return ListAnimais;
+
     }
     
+        /// 1 = Eficiente 2 Ineficiente 3 Intermediario
+    public List<TOAnimal> GetGPR(Integer lnIndice) throws Exception {
+
+        List<TOAnimal> ListAnimais = new ArrayList<TOAnimal>();
+        String NomeInstancia, Nome, Sexo, Numero, InstanciaCobertura, DataCobertura;
+        String RGD, Nascimento;
+        Date dNascimento;
+
+        int Codigo;
+
+        String queryString;
+        Query query;
+
+        queryString = "PREFIX owl:<http://www.w3.org/2002/07/owl#>\n"
+                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX embrapa: <http://www.semanticweb.org/heitor/ontologies/2016/6/Embrapa#>\n"
+                + "SELECT distinct ?Nome ?Numero ?Registro ?Nascimento ?Codigo ";
+        
+        switch (lnIndice) {
+            case 1:
+                queryString += "WHERE {?Cattle a embrapa:Efficient_GPR.\n";
+                break;
+            case 2:
+                queryString += "WHERE {?Cattle a embrapa:Inefficient_GPR.\n";
+                break;
+            case 3:
+                queryString += "WHERE {?Cattle a embrapa:Intermediary_GPR.\n";
+                break;
+        }
+
+        queryString += "?Cattle embrapa:Cattle_Name ?Nome.\n"
+                + "?Cattle embrapa:Cattle_Number ?Numero.\n"
+                + "?Cattle embrapa:Cattle_Birth ?Nascimento.\n"
+                + "?Cattle embrapa:Cattle_RGD ?Registro.\n"
+                + "?Cattle embrapa:Cattle_Code ?Codigo.\n"
+                + "}";
+
+        query = QueryFactory.create(queryString);
+        try (QueryExecution execution = QueryExecutionFactory.create(query, infModel)) {
+            ResultSet results = execution.execSelect();
+            List<String> list = new ArrayList<>();
+
+            while (results.hasNext()) {
+                QuerySolution qs = results.next();
+                String lxGado = qs.toString();
+                Nome = qs.getLiteral("Nome").getString();
+                Numero = qs.getLiteral("Numero").getString();
+                Codigo = Integer.parseInt(qs.getLiteral("Codigo").getString());
+                RGD = qs.getLiteral("Registro").getString();
+                Nascimento = qs.getLiteral("Nascimento").getString();
+
+                DateFormat ConversorDate2 = new SimpleDateFormat("dd-MM-yyyy");
+
+                String dateTemp = Nascimento.substring(0, 2) + "-"
+                        + Nascimento.substring(2, 4) + "-" + Nascimento.substring(4, 8);
+
+                Date dnascimento = new java.sql.Date(ConversorDate2.parse(dateTemp).getTime());
+
+                ListAnimais.add(new TOAnimal(Codigo, RGD, Numero, 0, 0, dnascimento,
+                        Nome, ""));
+
+            }
+        }
+
+        return ListAnimais;
+
+    }
+           /// 1 = Eficiente 2 Ineficiente 3 Intermediario
+    public List<TOAnimal> GetCGPR(Integer lnIndice) throws Exception {
+
+        List<TOAnimal> ListAnimais = new ArrayList<TOAnimal>();
+        String NomeInstancia, Nome, Sexo, Numero, InstanciaCobertura, DataCobertura;
+        String RGD, Nascimento;
+        Date dNascimento;
+
+        int Codigo;
+
+        String queryString;
+        Query query;
+
+        queryString = "PREFIX owl:<http://www.w3.org/2002/07/owl#>\n"
+                + "PREFIX rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#>\n"
+                + "PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>\n"
+                + "PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>\n"
+                + "PREFIX embrapa: <http://www.semanticweb.org/heitor/ontologies/2016/6/Embrapa#>\n"
+                + "SELECT distinct ?Nome ?Numero ?Registro ?Nascimento ?Codigo ";
+        
+        switch (lnIndice) {
+            case 1:
+                queryString += "WHERE {?Cattle a embrapa:Efficient_CGPR.\n";
+                break;
+            case 2:
+                queryString += "WHERE {?Cattle a embrapa:Inefficient_CGPR.\n";
+                break;
+            case 3:
+                queryString += "WHERE {?Cattle a embrapa:Intermediary_CGPR.\n";
+                break;
+        }
+
+        queryString += "?Cattle embrapa:Cattle_Name ?Nome.\n"
+                + "?Cattle embrapa:Cattle_Number ?Numero.\n"
+                + "?Cattle embrapa:Cattle_Birth ?Nascimento.\n"
+                + "?Cattle embrapa:Cattle_RGD ?Registro.\n"
+                + "?Cattle embrapa:Cattle_Code ?Codigo.\n"
+                + "}";
+
+        query = QueryFactory.create(queryString);
+        try (QueryExecution execution = QueryExecutionFactory.create(query, infModel)) {
+            ResultSet results = execution.execSelect();
+            List<String> list = new ArrayList<>();
+
+            while (results.hasNext()) {
+                QuerySolution qs = results.next();
+                String lxGado = qs.toString();
+                Nome = qs.getLiteral("Nome").getString();
+                Numero = qs.getLiteral("Numero").getString();
+                Codigo = Integer.parseInt(qs.getLiteral("Codigo").getString());
+                RGD = qs.getLiteral("Registro").getString();
+                Nascimento = qs.getLiteral("Nascimento").getString();
+
+                DateFormat ConversorDate2 = new SimpleDateFormat("dd-MM-yyyy");
+
+                String dateTemp = Nascimento.substring(0, 2) + "-"
+                        + Nascimento.substring(2, 4) + "-" + Nascimento.substring(4, 8);
+
+                Date dnascimento = new java.sql.Date(ConversorDate2.parse(dateTemp).getTime());
+
+                ListAnimais.add(new TOAnimal(Codigo, RGD, Numero, 0, 0, dnascimento,
+                        Nome, ""));
+
+            }
+        }
+
+        return ListAnimais;
+
+    }
+
 }
